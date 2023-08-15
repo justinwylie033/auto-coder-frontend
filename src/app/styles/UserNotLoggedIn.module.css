@@ -1,0 +1,13 @@
+.buttoncontainer{
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .memberbuttons{
+    background-color: rgb(189, 252, 189);
+    color: black;
+    margin: .6rem;
+    width: 10vw;
+  }

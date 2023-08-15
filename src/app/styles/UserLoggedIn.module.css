@@ -1,0 +1,29 @@
+.UserControlPanel{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    width: 29%;
+    margin: .8rem;
+    height: 70%;
+    border-radius: 20px;
+
+}
+
+.UsersName{
+}
+
+.logoutbtn{
+    background-color: red;
+    color: white;
+    border-radius: 90px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.logoutbtn:hover{
+    background-color: white;
+    color: red;
+    border-radius: 90px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+}

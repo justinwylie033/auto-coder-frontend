@@ -1,0 +1,32 @@
+.navbar{
+  height:8vh;
+  width: 100%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logocontainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  
+}
+
+.logocontainer h1 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  color: black;
+}
+
+.logo{
+  height: 4rem;
+  width: 4rem;
+}
+
