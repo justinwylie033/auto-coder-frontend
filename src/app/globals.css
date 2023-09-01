@@ -2,6 +2,13 @@ html{background-color: white;}
 
 @media (prefers-color-scheme: dark) {
   html {
-    background-color: black;
+    background-color: white;
   }
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif; /* This ensures the font is applied throughout the site */
 }

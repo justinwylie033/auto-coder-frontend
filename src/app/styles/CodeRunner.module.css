@@ -1,160 +1,73 @@
 .container {
   display: flex;
   flex-direction: column;
-  width: 94%;
-  min-height: 95%;
-  margin: 0 auto;
-  margin-top: 2.4rem;
   padding: 24px;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f9f9f9;
   border-radius: 8px;
-  text-align: center;
-
-
 }
 
+/* Form and Input styles */
 .codeForm {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 100%;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
-
-
-
-.languagelabel {
-  margin: 8px;
-  font-weight: 600;
-  font-size: 18px;
-}
-
-.codeInput {
-  resize: vertical;
+/* Status Messages */
+.updates, .functionDescription, .loadingIndicator {
   font-family: 'Courier New', Courier, monospace;
-  padding: 12px;
-  border-radius: 5px;
-  font-size: 16px;
-  min-height: 250px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  background-color: black;
-  color: white;
-  width: 76%;
-  border: none;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 4px;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
-}
-
-.codeOutput {
-  resize: vertical;
-  font-family: 'Courier New', Courier, monospace;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  min-height: 100px;
-  margin-bottom: 12px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  background-color: black;
-  color: yellow;
-}
-
-.submitBtn {
-  background-color: #4caf50;
-  color: white;
-  font-weight: 600;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: 0.2s ease-in-out, 0.2s ease-in-out box-shadow;
-  width: 12%;
-  padding: 9px;
-  margin: 1.4rem;}
-
-.submitBtn:hover {
-  background-color: #0056b3;
-  transition: 0.2s ease-in-out, 0.2s ease-in-out box-shadow;
-
-}
-
-.PlayIcon{
-  color: white;
-  font-size: 1.5rem;
-
-}
-
-.error {
-  color: red;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #f6f6f6;
+  margin-top: 16px;
   padding: 16px;
   border-radius: 5px;
-  border: 1px solid #f07272;
-  box-shadow: 0 0 5px rgba(240, 114, 114, 0.3);
-  margin-top: 16px;
-  font-size: 16px;
-}
-
-.output {
-  color: #0056b3;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #f6f6f6;
-  padding: 16px;
-  border-radius: 5px;
-  margin-top: 16px;
   font-size: 16px;
 }
 
 .updates {
+  background-color: #f6f6f6;
   color: green;
-  font-family: 'Courier New', Courier, monospace;
+}
+
+.functionDescription {
+  background-color: #f6f6f6;
+}
+
+.loadingIndicator {
+  text-align: center;
+  background-color: #e8e8e8;
+  color: #888;
+}
+
+.output {
   background-color: #f6f6f6;
   padding: 16px;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(240, 114, 114, 0.3);
-  margin-top: 16px;
   font-size: 16px;
 }
 
-.ButtonContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.LangButton{
-  background-color: #0057b3ce;
-  color: white;
-  font-weight: 600;
-  border: none;
+.resultsSection {
+  background-color: #f6f6f6;
+  padding: 24px;
   border-radius: 5px;
-  cursor: pointer;
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: 0.2s ease-in-out, 0.2s ease-in-out box-shadow;
-  width: 7%;
-  padding: 9px;
-  margin: .6rem;
+  margin-top: 24px;
+  font-size: 16px;
 }
 
-.LangButton:hover {
-  background-color: #0056b3;
+/* Metrics (Efficiency and Unit Tests) */
+.codeMetrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 24px;
 }
 
-
-
-.LangButton.selected {
-  background-color: #4caf50;
-  color: white;
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.LangButton.selected:hover {
-  background-color: #43a047;
+.metric h2 {
+  margin-bottom: 12px;
 }

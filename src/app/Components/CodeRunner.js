@@ -1,60 +1,26 @@
-import React, { useState, useEffect, useReducer } from "react";
-import axios from "axios";
-import AutoExpandTextarea from "./AutoExpandTextArea";
+import React, { useReducer } from "react";
 import styles from "../styles/CodeRunner.module.css";
-import { Button, IconButton } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import OptionToolbar from "./OptionToolbar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase";
-
-const languages = [
-  "Python",
-  "JavaScript",
-  "CPP",
-  "Java",
-  "HTML",
-  "CSS",
-  "JSX",
-  "SQL",
-  "PHP",
-  "Swift",
-  "C#",
-  "Go",
-];
-const initialError =
-  "An error occurred while processing the code requirements.";
+import { apiRequest } from "./api";
+import ResultsSection from "./ResultsSection";
+import SearchBox from "./SearchBox";
 
 const initialState = {
-  language: "Python",
   code_requirements: "",
   code: "",
   output: "",
-  expandOutput: false,
+  efficiency: "",
   error: "",
-  container_name: "",
-  evaluation: "",
-  mode: "",
+  statusMessage: "",
+  isLoading: false,
+  functionDescription: "",
 };
-
-const LanguageButton = ({ language, currentLanguage, dispatch }) => (
-  <Button
-    className={`${styles.LangButton} ${
-      currentLanguage === language ? styles.selected : ""
-    }`}
-    onClick={() => dispatch({ type: "UPDATE_STATE", payload: { language } })}
-  >
-    {language}
-  </Button>
-);
 
 function reducer(state, action) {
   switch (action.type) {
     case "UPDATE_STATE":
-      return {
-        ...state,
-        ...action.payload,
-      };
+      return { ...state, ...action.payload };
     default:
       throw new Error("Unexpected action");
   }
@@ -62,150 +28,148 @@ function reducer(state, action) {
 
 const CodeRunner = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [user] = useAuthState(auth);
 
-  const {
-    language,
-    code_requirements,
-    code,
-    output,
-    error,
-    container_name,
-    evaluation,
-    expandOutput,
-    mode,
-  } = state;
-  const [user, loading, auth_error] = useAuthState(auth);
+  const updateState = (data) =>
+    dispatch({ type: "UPDATE_STATE", payload: data });
 
-  useEffect(() => {
-    if (user) {
-      // have to dispatch an action here make sure an actual user object is passed
-      dispatch({
-        type: "UPDATE_STATE",
-        payload: { container_name: "docker_" + user.uid },
-      });
-    }
-  }, [user]);
+  const generateAndRunCode = async (e) => {
+    e.preventDefault();
 
-  const handleRequest = async (url, payload) => {
-    console.log(`Sending request to ${url}`);
-  
+    let attempts = 0; // Track the number of attempts
+
     try {
-      const response = await axios.post(`http://localhost:5000/${url}`, payload);
-  
-      const data = {
-        ...payload, // maintain old state
-        ...response.data, // update state with response
-      };
-  
-      dispatch({ type: "UPDATE_STATE", payload: data });
-  
-      console.log("Got response:", response);
-  
-      return data;
-    } catch (e) {
-      dispatch({
-        type: "UPDATE_STATE",
-        payload: { error: e.message, expandOutput: false },
+      // Generate function
+      updateState({ statusMessage: "Generating new code...", isLoading: true });
+      const generatedCode = await apiRequest("generate-code", {
+        prompt: state.code_requirements,
       });
-      return null;
+      updateState({
+        code: generatedCode.code,
+        statusMessage: "Generated new code.",
+      });
+
+      // Install packages
+      updateState({
+        statusMessage: "Installing required packages...",
+        isLoading: true,
+      });
+      await apiRequest("install-packages", { code: generatedCode.code });
+      updateState({ statusMessage: "Packages installed successfully." });
+
+      let codeToExecute = generatedCode.code;
+      let executionResult;
+
+      do {
+        // Test/Execute
+        updateState({
+          statusMessage: "Testing/Executing code...",
+          isLoading: true,
+        });
+        executionResult = await apiRequest("execute-code", {
+          code: codeToExecute,
+        });
+
+        if (executionResult.status !== "success") {
+          console.log("Attempting to fix code with data:", {
+            code: codeToExecute,
+            info: executionResult.error,
+          }); // Add this line for logging
+          updateState({
+            error: executionResult.error,
+            statusMessage: `Error encountered. Attempting to fix (Attempt ${
+              attempts + 1
+            })...`,
+          });
+          const fixResponse = await apiRequest("fix-code", {
+            code: codeToExecute,
+            info: executionResult.error,
+          });
+          codeToExecute = fixResponse.corrected_code; // Update the code to the fixed version
+        }
+
+        attempts++;
+      } while (executionResult.status !== "success" && attempts < 10);
+
+      if (executionResult.status === "success") {
+        updateState({
+          statusMessage: "Code executed successfully!",
+          output: executionResult.output,
+          efficiency: executionResult.efficiency, // Added this line
+          isLoading: false,
+        });
+
+        // Generate function description
+        const description = await apiRequest("describe-function", {
+          code: codeToExecute,
+        });
+        updateState({
+          functionDescription: description.description,
+          statusMessage: "Function described successfully.",
+        });
+      } else {
+        updateState({
+          statusMessage: `Failed to execute code successfully after ${attempts} attempts.`,
+        });
+      }
+    } catch (err) {
+      updateState({ error: err.message, statusMessage: "", isLoading: false });
     }
   };
-  
-  const runCode = (payload) => handleRequest("run-code", payload);
-  const improveCode = (payload) => handleRequest("improve-code", payload);
-  const evaluateCode = (payload) => handleRequest("evaluate-code", payload);
-  const generateCode = () =>
-    handleRequest("get-initial-code", {
-      language,
-      code_requirements,
-      container_name,
-    });
-
-
-// in generateWorkingCode:
-const generateWorkingCode = async (e) => {
-  e.preventDefault();
-
-  let payload = {
-    language,
-    code_requirements,
-    container_name,
-  };
-
-  payload = await generateCode(payload);
-
-  let evalResponse = null;
-
-  do {
-    payload = await runCode(payload);
-    payload = await improveCode(payload);
-
-    evalResponse = await evaluateCode(payload);
-  } while (evalResponse?.evaluation === "no");
-};
 
   return (
     <div className={styles.container}>
-      <form className={styles.codeForm} onSubmit={generateWorkingCode}>
-        <div className={styles.ButtonContainer}>
-          {languages.map((lang) => (
-            <LanguageButton
-              key={lang}
-              language={lang}
-              currentLanguage={state.language}
-              dispatch={dispatch}
-            />
-          ))}
-        </div>
-        <OptionToolbar
-          setMode={(mode) =>
-            dispatch({ type: "UPDATE_STATE", payload: { mode } })
-          }
-          mode={state.mode}
-        />{" "}
-        <textarea
-          className={styles.codeInput}
-          name="code_requirements"
-          id="code_requirements"
-          rows="10"
-          cols="50"
-          placeholder="Please Enter your code requirements >>>"
-          value={code_requirements}
-          onChange={(e) =>
-            dispatch({
-              type: "UPDATE_STATE",
-              payload: { code_requirements: e.target.value },
-            })
-          }
+      <form
+        className={styles.codeForm}
+        onSubmit={generateAndRunCode}
+        aria-label="code-runner-form"
+      >
+        <SearchBox
+          value={state.code_requirements}
+          onChange={(e) => updateState({ code_requirements: e.target.value })}
+          placeholder="Search The Functionary..."
+          aria-label="search-box"
         />
-        <IconButton className={styles.submitBtn} type="submit">
-          <PlayArrowIcon />
-        </IconButton>
-        <br />
       </form>
-      {code && (
-        <AutoExpandTextarea
-          placeholder="Your output will appear here"
-          value={code ? code.toString() : ""}
-          shouldExpand={expandOutput}
-          className={`${styles.codeOutput} ${
-            expandOutput ? styles.expanded : ""
-          }`}
-        />
-      )}
-      {error && (
-        <section>
-          <h3>Error:</h3>
-          <pre className={styles.error}>{error}</pre>
-        </section>
-      )}
-      {output && (
-        <section>
-          <pre className={styles.output}>{output}</pre>
-        </section>
-      )}
+      <StatusMessage message={state.statusMessage || state.error} />
+      <FunctionDescription description={state.functionDescription} />
+      <ResultsSection code={state.code} efficiency={state.efficiency} />
+      <OutputSection output={state.output} />
+      
+      {state.isLoading && <LoadingIndicator />}
     </div>
   );
 };
+
+const LoadingIndicator = () => (
+  <div className={styles.loadingIndicator}>Loading...</div>
+);
+
+const StatusMessage = ({ message }) => (
+  <div className={styles.updates}>{message}</div>
+);
+
+const FunctionDescription = ({ description }) =>
+  description && (
+    <div className={styles.functionDescription}>
+      <h2>Description:</h2>
+      <p>{description}</p>
+    </div>
+  );
+
+
+const OutputSection = ({ output }) => (
+  <section className={styles.output}>
+    <pre>{output}</pre>
+  </section>
+);
+
+const EfficiencySection = ({ efficiency }) => (
+  <section className={styles.efficiency}>
+    <h3>Efficiency:</h3>
+    <pre>{efficiency}</pre>
+  </section>
+);
+
 
 export default CodeRunner;

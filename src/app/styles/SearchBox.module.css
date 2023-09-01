@@ -1,0 +1,33 @@
+/* SearchBox.module.css */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 5px;
+  padding: 8px;
+  background-color: #fff; /* White background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  transition: box-shadow 0.3s; /* Shadow transition for hover effect */
+}
+
+.container:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.12); /* Darker shadow on hover */
+}
+
+.searchInput {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  color: #555; /* Dark grey for better readability */
+  font-size: 16px;
+  background-color: transparent;
+  border: none;/* Border for distinction */
+  border-radius: 4px; /* Consistent rounded corners */
+  outline: none;
+  padding: 8px 12px;
+  transition: border-color 0.3s; /* Border transition for focus effect */
+}
+
+.searchInput:focus {
+  border-color: #333; /* Darker border on focus */
+}

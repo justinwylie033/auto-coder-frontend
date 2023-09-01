@@ -3,10 +3,12 @@
     align-items: center;
     justify-content: space-around;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    width: 29%;
-    margin: .8rem;
+    width: 20%;
+    margin: 4rem;
     height: 70%;
     border-radius: 20px;
+    background-color: white;
+    opacity: 75%;
 
 }
 
