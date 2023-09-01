@@ -1,0 +1,108 @@
+.resultsSection {
+    background: linear-gradient(90deg, #6246ea 0%, #b620e0 100%);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 10px;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.resultsSection:hover {
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 25px 15px;
+    transform: translateY(-4px);
+}
+
+.header {
+    border-bottom: 2px solid #d6eef8;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+    color: white;  
+}
+
+.contentContainer {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+.textAreaContainer {
+    flex: 1; 
+    position: relative;
+}
+
+.descriptionContainer {
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.updates {
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    background-color: transparent;
+}
+
+.metricsContainer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 28px;
+    gap: 22px; 
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px 20px; 
+    width: 90%;
+    background: linear-gradient(135deg, #4634A5 0%, #352385 100%);
+    border: 1px solid violet;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08); 
+}
+
+.metric:hover {
+    background: linear-gradient(135deg, #352385 0%, #231570 100%);
+    transform: scale(1.02) translateY(-3px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.12); 
+}
+
+.metric h3, .metric span {
+    color: white;
+}
+
+.metric h3 {
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    margin-bottom: 8px; 
+}
+
+.metric span {
+    font-size: 1rem;
+    color: #A8A8FF;
+}

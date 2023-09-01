@@ -1,0 +1,25 @@
+.updates, .functionDescription, .loadingIndicator {
+  font-family: 'Courier New', Courier, monospace;
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.updates {
+  background-color: #d1ffd6;
+  color: #007700;
+}
+
+.functionDescription {
+  background-color: #f2faff;
+  color: #0055a5;
+}
+
+.loadingIndicator {
+  text-align: center;
+  background-color: #ffebcd;
+  color: #b35d00;
+}

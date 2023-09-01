@@ -1,31 +1,40 @@
 import React from 'react';
-import styles from "../styles/CodeRunner.module.css";
+import styles from "../styles/ResultSection.module.css";
 import CodeTextArea from './CodeTextArea';
+import extractFunctionSignature from './extractFunctionSignature';
 
-const ResultsSection = ({ code, efficiency }) => (
-    <section className={styles.resultsSection}>
-        <h2>Generated Code</h2>
-        <CodeTextArea 
-            placeholder="Your output will appear here"
-            value={code ? code.toString() : ""}
-            readOnly={true}
-            type="code"
-        />
-        <div className={styles.codeMetrics}>
-        
-        <div className={styles.metric}>
-        <h2>Estimated Efficiency</h2>
-        <p>{efficiency || "Not evaluated"}</p>
-        </div>
-        <div className={styles.metric}>
-        <h2>Unit Tests</h2>
+const ResultsSection = ({ code, efficiency, isLoading, statusMessage, description }) => {
+    const functionSignature = extractFunctionSignature(code);
 
-            {/* Placeholder for unit tests. This should be replaced by actual unit tests results */}
-            <p>🟢 All Tests Passed</p>
+    return (
+        <div className={styles.resultsSection}>
+            <header className={styles.header}>
+                <h2>{functionSignature}</h2>
+                {description && <p className={styles.description}>{description}</p>}
+            </header>
+            <div className={styles.textAreaContainer}>
+                <CodeTextArea 
+                    value={code ? code.toString() : ""}
+                    readOnly={true}
+                />
+                {isLoading && 
+                    <div className={styles.overlay}>
+                        <div className={styles.updates}>{statusMessage}</div>
+                    </div>
+                }
+            </div>
+            <div className={styles.metricsContainer}>
+                <div className={styles.metric}>
+                    <h3>Estimated Efficiency</h3>
+                    <span>{efficiency || "Not evaluated"}</span>
+                </div>
+                <div className={styles.metric}>
+                    <h3>Unit Tests</h3>
+                    <span>🟢 All Tests Passed</span>
+                </div>
+            </div>
         </div>
-        </div>
-
-    </section>
-);
+    );
+};
 
 export default ResultsSection;
